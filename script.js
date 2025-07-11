@@ -76,3 +76,50 @@ deleteButton.addEventListener('click', () => {
     updateDisplay();
 });
 
+document.addEventListener('keydown', (e) => {
+  const key = e.key;
+
+  // Digits 0-9 and .
+  if (!isNaN(key) || key === '.') {
+    if (key === '.' && currentInput.includes('.')) return;
+    currentInput += key;
+    updateDisplay();
+  }
+
+  // Operators
+  if (['+', '-', '*', '/'].includes(key)) {
+    if (currentInput === '') return;
+    if (previousInput !== '') {
+      currentInput = operate(previousInput, currentInput, operator).toString();
+      updateDisplay();
+    }
+
+    // Convert * and / to symbols used in buttons
+    operator = key === '*' ? '×' : key === '/' ? '÷' : key;
+    previousInput = currentInput;
+    currentInput = '';
+  }
+
+  // Enter or =
+  if (key === 'Enter' || key === '=') {
+    if (currentInput === '' || previousInput === '' || !operator) return;
+    currentInput = operate(previousInput, currentInput, operator).toString();
+    operator = null;
+    previousInput = '';
+    updateDisplay();
+  }
+
+  // Backspace
+  if (key === 'Backspace') {
+    currentInput = currentInput.slice(0, -1);
+    updateDisplay();
+  }
+
+  // Escape (clear)
+  if (key === 'Escape') {
+    currentInput = '';
+    previousInput = '';
+    operator = null;
+    updateDisplay();
+  }
+});
