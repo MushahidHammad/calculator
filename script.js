@@ -91,6 +91,20 @@ deleteButton.addEventListener('click', () => {
   updateDisplay();
 });
 
+// Handle equals button
+equalsButton.addEventListener('click', () => {
+  if (currentInput === '' || previousInput === '' || !operator) return;
+
+  currentInput = operate(previousInput, currentInput, operator).toString();
+  operator = null;
+  previousInput = '';
+
+  // Remove operator highlight
+  operatorButtons.forEach(btn => btn.classList.remove('active'));
+
+  updateDisplay();
+});
+
 document.addEventListener('keydown', (e) => {
   const key = e.key;
 
