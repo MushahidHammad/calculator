@@ -41,16 +41,25 @@ numberButtons.forEach(button => {
 
 // Handle operator button clicks
 operatorButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        if (currentInput === '') return;
-        if (previousInput !== '') {
-            currentInput = operate(previousInput, currentInput, operator).toString();
-            updateDisplay();
-        }
-        operator = button.textContent;
-        previousInput = currentInput;
-        currentInput = '';
-    });
+  button.addEventListener('click', () => {
+    const op = button.textContent;
+
+    // If user presses operator repeatedly before second input, just update operator
+    if (currentInput === '' && previousInput !== '') {
+      operator = op;
+      return;
+    }
+
+    // If currentInput and previousInput exist, do the operation
+    if (previousInput !== '' && currentInput !== '') {
+      currentInput = operate(previousInput, currentInput, operator).toString();
+      updateDisplay();
+    }
+
+    operator = op;
+    previousInput = currentInput;
+    currentInput = '';
+  });
 });
 
 //Handle equals button
