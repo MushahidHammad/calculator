@@ -1,4 +1,5 @@
 // Get reference
+const equationDisplay = document.getElementById('equation');
 const display = document.getElementById('display');
 const numberButtons = document.querySelectorAll('.number');
 const operatorButtons = document.querySelectorAll('.operator');
@@ -12,8 +13,15 @@ let operator = null;
 
 // Update the display
 function updateDisplay() {
-    display.textContent = currentInput || '0';
+  display.textContent = currentInput || '0';
+
+  if (previousInput && operator) {
+    equationDisplay.textContent = `${previousInput} ${operator}`;
+  } else {
+    equationDisplay.textContent = '';
+  }
 }
+
 
 // Basic operations
 function operate(a, b, operator) {
@@ -44,13 +52,17 @@ operatorButtons.forEach(button => {
   button.addEventListener('click', () => {
     const op = button.textContent;
 
-    // If user presses operator repeatedly before second input, just update operator
+    // Remove 'active' class from all operator buttons
+    operatorButtons.forEach(btn => btn.classList.remove('active'));
+
+    // Add 'active' to the currently clicked operator
+    button.classList.add('active');
+
     if (currentInput === '' && previousInput !== '') {
       operator = op;
       return;
     }
 
-    // If currentInput and previousInput exist, do the operation
     if (previousInput !== '' && currentInput !== '') {
       currentInput = operate(previousInput, currentInput, operator).toString();
       updateDisplay();
@@ -60,23 +72,6 @@ operatorButtons.forEach(button => {
     previousInput = currentInput;
     currentInput = '';
   });
-});
-
-//Handle equals button
-equalsButton.addEventListener('click', () => {
-    if (currentInput === '' || previousInput === '' || !operator) return;
-    currentInput = operate(previousInput, currentInput, operator).toString();
-    operator = null;
-    previousInput = '';
-    updateDisplay();
-});
-
-// Handle clear 
-clearButton.addEventListener('click', () => {
-    currentInput = '';
-    previousInput = '';
-    operator = null;
-    updateDisplay();
 });
 
 // Handle delete

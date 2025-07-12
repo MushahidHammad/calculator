@@ -74,3 +74,20 @@ body {
 .zero {
     grid-column: span 2;
 }
+
+.btn.operator.active {
+  box-shadow: 0 0 0 3px #ff9500 inset;
+}
+
+.display-wrapper {
+  margin-bottom: 20px;
+}
+
+.display.small {
+  background-color: transparent;
+  color: #ccc;
+  font-size: 1rem;
+  text-align: right;
+  min-height: 20px;
+  margin-bottom: 5px;
+}
