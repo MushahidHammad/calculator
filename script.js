@@ -22,29 +22,28 @@ function updateDisplay() {
   }
 }
 
-
 // Basic operations
 function operate(a, b, operator) {
-    a = parseFloat(a);
-    b = parseFloat(b);
-    if (operator === '+') return a + b;
-    if (operator === '-') return a - b;
-    if (operator === '×') return a * b;
-    if (operator === '÷') {
-        if (b === 0) return 'Error';
-        return a / b;
-    }
-    return b;
+  a = parseFloat(a);
+  b = parseFloat(b);
+  if (operator === '+') return a + b;
+  if (operator === '-') return a - b;
+  if (operator === '×') return a * b;
+  if (operator === '÷') {
+    if (b === 0) return 'Error';
+    return a / b;
+  }
+  return b;
 }
 
 // Handle number button clicks
 numberButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const value = button.textContent;
-        if (value === '.' && currentInput.includes('.')) return;
-        currentInput += value;
-        updateDisplay();
-    });
+  button.addEventListener('click', () => {
+    const value = button.textContent;
+    if (value === '.' && currentInput.includes('.')) return;
+    currentInput += value;
+    updateDisplay();
+  });
 });
 
 // Handle operator button clicks
@@ -74,10 +73,22 @@ operatorButtons.forEach(button => {
   });
 });
 
-// Handle delete
+// Handle clear button
+clearButton.addEventListener('click', () => {
+  currentInput = '';
+  previousInput = '';
+  operator = null;
+
+  // Remove operator highlight
+  operatorButtons.forEach(btn => btn.classList.remove('active'));
+
+  updateDisplay();
+});
+
+// Handle delete button
 deleteButton.addEventListener('click', () => {
-    currentInput = currentInput.slice(0, -1);
-    updateDisplay();
+  currentInput = currentInput.slice(0, -1);
+  updateDisplay();
 });
 
 document.addEventListener('keydown', (e) => {
@@ -92,26 +103,26 @@ document.addEventListener('keydown', (e) => {
 
   // Operators
   if (['+', '-', '*', '/'].includes(key)) {
-      if (currentInput === '') return;
+    if (currentInput === '') return;
 
-  if (previousInput !== '') {
-    currentInput = operate(previousInput, currentInput, operator).toString();
-    updateDisplay();
-  }
-
-  // Convert * and / to symbols used in buttons
-  operator = key === '*' ? '×' : key === '/' ? '÷' : key;
-
-  // Highlight the correct operator button
-  operatorButtons.forEach(btn => {
-    if (btn.textContent === operator) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
+    if (previousInput !== '') {
+      currentInput = operate(previousInput, currentInput, operator).toString();
+      updateDisplay();
     }
-  });
-  previousInput = currentInput;
-  currentInput = '';
+
+    // Convert * and / to symbols used in buttons
+    operator = key === '*' ? '×' : key === '/' ? '÷' : key;
+
+    // Highlight the correct operator button
+    operatorButtons.forEach(btn => {
+      if (btn.textContent === operator) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    previousInput = currentInput;
+    currentInput = '';
   }
 
   // Enter or =
@@ -120,6 +131,7 @@ document.addEventListener('keydown', (e) => {
     currentInput = operate(previousInput, currentInput, operator).toString();
     operator = null;
     previousInput = '';
+    operatorButtons.forEach(btn => btn.classList.remove('active'));
     updateDisplay();
   }
 
@@ -134,6 +146,7 @@ document.addEventListener('keydown', (e) => {
     currentInput = '';
     previousInput = '';
     operator = null;
+    operatorButtons.forEach(btn => btn.classList.remove('active'));
     updateDisplay();
   }
 });
