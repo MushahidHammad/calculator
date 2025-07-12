@@ -29,7 +29,7 @@ function operate(a, b, operator) {
     b = parseFloat(b);
     if (operator === '+') return a + b;
     if (operator === '-') return a - b;
-    if (operator === 'x') return a * b;
+    if (operator === '×') return a * b;
     if (operator === '÷') {
         if (b === 0) return 'Error';
         return a / b;
@@ -92,16 +92,26 @@ document.addEventListener('keydown', (e) => {
 
   // Operators
   if (['+', '-', '*', '/'].includes(key)) {
-    if (currentInput === '') return;
-    if (previousInput !== '') {
-      currentInput = operate(previousInput, currentInput, operator).toString();
-      updateDisplay();
-    }
+      if (currentInput === '') return;
 
-    // Convert * and / to symbols used in buttons
-    operator = key === '*' ? '×' : key === '/' ? '÷' : key;
-    previousInput = currentInput;
-    currentInput = '';
+  if (previousInput !== '') {
+    currentInput = operate(previousInput, currentInput, operator).toString();
+    updateDisplay();
+  }
+
+  // Convert * and / to symbols used in buttons
+  operator = key === '*' ? '×' : key === '/' ? '÷' : key;
+
+  // Highlight the correct operator button
+  operatorButtons.forEach(btn => {
+    if (btn.textContent === operator) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+  previousInput = currentInput;
+  currentInput = '';
   }
 
   // Enter or =
